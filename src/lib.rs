@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use anyhow::{Context, Result};
-use std::{fs, fmt::Write};
+use std::{path::Path, fs, fmt::Write};
 use serde::{Serialize, Deserialize};
 
 const TODO_PATH: &str = "todo.json";
@@ -29,21 +29,19 @@ struct Task {
     done: bool
 }
 
-fn save(tasks: &[Task]) -> Result<()> {
+fn save(path: &Path, tasks: &[Task]) -> Result<()> {
     let content = serde_json::to_string_pretty(tasks)?;
-    fs::write(TODO_PATH, content).with_context(|| format!("failed to write {}", TODO_PATH))?;
+    fs::write(path, content).with_context(|| format!("failed to write {}", path.display()))?;
 
     Ok(())
 }
 
-fn load() -> Result<Vec<Task>> {
-    match fs::read_to_string(TODO_PATH) {
-        Ok(content) => { 
-            let vec = serde_json::from_str(&content)
-                .with_context(|| format!("failed to parse {}", TODO_PATH))?;
-            Ok(vec)},
+fn load(path: &Path) -> Result<Vec<Task>> {
+    match fs::read_to_string(path) {
+        Ok(content) => serde_json::from_str(&content)
+                .with_context(|| format!("failed to parse {}", path.display())),
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => { Ok(Vec::new()) }
-        Err(e) => { Err(e).with_context(|| format!("failed to read {}", TODO_PATH))}
+        Err(e) => { Err(e).with_context(|| format!("failed to read {}", path.display()))}
     }
 }
 
