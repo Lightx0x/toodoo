@@ -1,6 +1,9 @@
 use clap::{Parser, Subcommand};
-use anyhow::{Result};
-use std::{fmt::Write};
+use anyhow::{Context, Result};
+use std::{fs, fmt::Write};
+use serde::{Serialize, Deserialize};
+
+const TODO_PATH: &str = "todo.json";
 
 #[derive(Parser)]
 #[command(version, about)]
@@ -19,11 +22,29 @@ pub enum TodoCommand {
     Done { id: usize }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 struct Task {
     id: usize,
     text: String,
     done: bool
+}
+
+fn save(tasks: &[Task]) -> Result<()> {
+    let content = serde_json::to_string_pretty(tasks)?;
+    fs::write(TODO_PATH, content).with_context(|| format!("failed to write {}", TODO_PATH))?;
+
+    Ok(())
+}
+
+fn load() -> Result<Vec<Task>> {
+    match fs::read_to_string(TODO_PATH) {
+        Ok(content) => { 
+            let vec = serde_json::from_str(&content)
+                .with_context(|| format!("failed to parse {}", TODO_PATH))?;
+            Ok(vec)},
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => { Ok(Vec::new()) }
+        Err(e) => { Err(e).with_context(|| format!("failed to read {}", TODO_PATH))}
+    }
 }
 
 fn add_task(tasks: &mut Vec<Task>, text: String) {
@@ -56,8 +77,6 @@ fn mark_done(tasks: &mut Vec<Task>, id: usize) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use anyhow::Ok;
-
     use super::*;
 
     #[test]
