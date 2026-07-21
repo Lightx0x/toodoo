@@ -48,19 +48,19 @@ pub fn load(path: &Path) -> Result<Vec<Task>> {
 }
 
 pub fn add_task(tasks: &mut Vec<Task>, text: String) {
+    let next_id = tasks.iter().map(|t| t.id).max().unwrap_or(0) + 1; 
+
     let new_task = Task {
         text,
-        id: tasks.len() + 1,
+        id: next_id,
         done: false
     };
 
     tasks.push(new_task);
 }
 
-pub fn remove_task(tasks: &mut Vec<Task>, id: usize) -> Result<()> {
+pub fn remove_task(tasks: &mut Vec<Task>, id: usize) {
     tasks.retain(|t| t.id != id);    
-    
-    Ok(())
 }
 
 pub fn list_tasks(tasks: &[Task]) -> String {

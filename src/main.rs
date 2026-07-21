@@ -14,7 +14,7 @@ fn main() -> Result<()> {
             save(path, &tasks)?
         },
         TodoCommand::Remove { id } => {
-            remove_task(&mut tasks, id)?;
+            remove_task(&mut tasks, id);
             save(path, &tasks)?
         },
         TodoCommand::Done { id } => {
