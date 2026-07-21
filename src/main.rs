@@ -13,6 +13,10 @@ fn main() -> Result<()> {
             add_task(&mut tasks, text);
             save(path, &tasks)?
         },
+        TodoCommand::Remove { id } => {
+            remove_task(&mut tasks, id)?;
+            save(path, &tasks)?
+        },
         TodoCommand::Done { id } => {
             mark_done(&mut tasks, id)?;
             save(path, &tasks)?

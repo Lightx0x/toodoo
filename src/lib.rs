@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use anyhow::{Context, Result};
-use std::{path::Path, fs, fmt::Write};
+use std::{fmt::Write, fs, path::Path, usize};
 use serde::{Serialize, Deserialize};
 
 pub const TODO_PATH: &str = "todo.json";
@@ -19,7 +19,9 @@ pub enum TodoCommand {
     /// Show list
     List,
     /// Mark list with id as done
-    Done { id: usize }
+    Done { id: usize },
+    /// Remove from list by id
+    Remove { id: usize }
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -40,7 +42,7 @@ pub fn load(path: &Path) -> Result<Vec<Task>> {
     match fs::read_to_string(path) {
         Ok(content) => serde_json::from_str(&content)
             .with_context(|| format!("failed to parse {}", path.display())),
-        Err(e) if e.kind() == std::io::ErrorKind::NotFound => { Ok(Vec::new()) }
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => { Ok(Vec::new()) }
         Err(e) => { Err(e).with_context(|| format!("failed to read {}", path.display()))}
     }
 }
@@ -53,6 +55,12 @@ pub fn add_task(tasks: &mut Vec<Task>, text: String) {
     };
 
     tasks.push(new_task);
+}
+
+pub fn remove_task(tasks: &mut Vec<Task>, id: usize) -> Result<()> {
+    tasks.retain(|t| t.id != id);    
+    
+    Ok(())
 }
 
 pub fn list_tasks(tasks: &[Task]) -> String {
