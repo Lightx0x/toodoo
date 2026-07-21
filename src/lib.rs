@@ -3,7 +3,7 @@ use anyhow::{Context, Result};
 use std::{path::Path, fs, fmt::Write};
 use serde::{Serialize, Deserialize};
 
-const TODO_PATH: &str = "todo.json";
+pub const TODO_PATH: &str = "todo.json";
 
 #[derive(Parser)]
 #[command(version, about)]
@@ -23,29 +23,29 @@ pub enum TodoCommand {
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-struct Task {
+pub struct Task {
     id: usize,
     text: String,
     done: bool
 }
 
-fn save(path: &Path, tasks: &[Task]) -> Result<()> {
+pub fn save(path: &Path, tasks: &[Task]) -> Result<()> {
     let content = serde_json::to_string_pretty(tasks)?;
     fs::write(path, content).with_context(|| format!("failed to write {}", path.display()))?;
 
     Ok(())
 }
 
-fn load(path: &Path) -> Result<Vec<Task>> {
+pub fn load(path: &Path) -> Result<Vec<Task>> {
     match fs::read_to_string(path) {
         Ok(content) => serde_json::from_str(&content)
-                .with_context(|| format!("failed to parse {}", path.display())),
+            .with_context(|| format!("failed to parse {}", path.display())),
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => { Ok(Vec::new()) }
         Err(e) => { Err(e).with_context(|| format!("failed to read {}", path.display()))}
     }
 }
 
-fn add_task(tasks: &mut Vec<Task>, text: String) {
+pub fn add_task(tasks: &mut Vec<Task>, text: String) {
     let new_task = Task {
         text,
         id: tasks.len() + 1,
@@ -55,7 +55,7 @@ fn add_task(tasks: &mut Vec<Task>, text: String) {
     tasks.push(new_task);
 }
 
-fn list_tasks(tasks: &[Task]) -> String {
+pub fn list_tasks(tasks: &[Task]) -> String {
     let mut list = String::new();
     for task in tasks {
         let task_status = if task.done { "✓" } else { " " };
@@ -64,7 +64,7 @@ fn list_tasks(tasks: &[Task]) -> String {
     list
 }
 
-fn mark_done(tasks: &mut Vec<Task>, id: usize) -> Result<()> {
+pub fn mark_done(tasks: &mut [Task], id: usize) -> Result<()> {
     if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
         task.done = true;
         Ok(())
@@ -132,5 +132,30 @@ mod tests {
         ];
 
         assert!(mark_done(&mut tasks, 99).is_err());
+    }
+
+#[test]
+    fn save_and_load_roundtrip() {
+        let path = std::env::temp_dir().join("weez_todo_roundtrip.json");
+        let tasks = vec![
+            Task { id: 1, text: "first".to_string(), done: false },
+            Task { id: 2, text: "second".to_string(), done: true },
+        ];
+
+        save(&path, &tasks).unwrap();
+        let loaded = load(&path).unwrap();
+
+        assert_eq!(loaded, tasks);
+
+        fs::remove_file(&path).ok();
+    }
+
+#[test]
+    fn load_returns_empty_vec_when_file_missing() {
+        let path = std::env::temp_dir().join("weez_todo_definitely_missing.json");
+        fs::remove_file(&path).ok(); // ensure it's gone even if a previous run left it
+
+        let loaded = load(&path).unwrap();
+        assert!(loaded.is_empty());
     }
 }
