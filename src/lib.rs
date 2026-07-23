@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use anyhow::{Context, Result};
-use std::{fmt::Write, fs, path::Path, usize};
+use std::{io, fmt::Write, fs, path::Path};
 use serde::{Serialize, Deserialize};
 
 pub const TODO_PATH: &str = "todo.json";
@@ -42,7 +42,7 @@ pub fn load(path: &Path) -> Result<Vec<Task>> {
     match fs::read_to_string(path) {
         Ok(content) => serde_json::from_str(&content)
             .with_context(|| format!("failed to parse {}", path.display())),
-            Err(e) if e.kind() == std::io::ErrorKind::NotFound => { Ok(Vec::new()) }
+        Err(e) if e.kind() == io::ErrorKind::NotFound => { Ok(Vec::new()) }
         Err(e) => { Err(e).with_context(|| format!("failed to read {}", path.display()))}
     }
 }
@@ -83,6 +83,8 @@ pub fn mark_done(tasks: &mut [Task], id: usize) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashSet;
+
     use super::*;
 
     #[test]
@@ -142,7 +144,7 @@ mod tests {
         assert!(mark_done(&mut tasks, 99).is_err());
     }
 
-#[test]
+    #[test]
     fn save_and_load_roundtrip() {
         let path = std::env::temp_dir().join("weez_todo_roundtrip.json");
         let tasks = vec![
@@ -158,12 +160,29 @@ mod tests {
         fs::remove_file(&path).ok();
     }
 
-#[test]
+    #[test]
     fn load_returns_empty_vec_when_file_missing() {
         let path = std::env::temp_dir().join("weez_todo_definitely_missing.json");
         fs::remove_file(&path).ok(); // ensure it's gone even if a previous run left it
 
         let loaded = load(&path).unwrap();
         assert!(loaded.is_empty());
+    }
+
+    #[test]
+    fn different_ids_after_task_remove() {
+        let mut tasks = vec![
+            Task { id: 1, text: "first".to_string(), done: false },
+            Task { id: 2, text: "second".to_string(), done: true },
+            Task { id: 3, text: "third".to_string(), done: false },
+        ];
+
+        remove_task(&mut tasks, 2);
+        add_task(&mut tasks, "fourth".to_string());
+
+        let ids = tasks.iter().map(|t| t.id).collect::<HashSet<usize>>();
+
+        assert_eq!(tasks.len(), ids.len());
+        assert_eq!(tasks[2].id, 4);
     }
 }
