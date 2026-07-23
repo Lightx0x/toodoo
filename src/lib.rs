@@ -1,7 +1,7 @@
-use clap::{Parser, Subcommand};
 use anyhow::{Context, Result};
-use std::{io, fmt::Write, fs, path::Path};
-use serde::{Serialize, Deserialize};
+use clap::{Parser, Subcommand};
+use serde::{Deserialize, Serialize};
+use std::{fmt::Write, fs, io, path::Path};
 
 pub const TODO_PATH: &str = "todo.json";
 
@@ -21,14 +21,14 @@ pub enum TodoCommand {
     /// Mark list with id as done
     Done { id: usize },
     /// Remove from list by id
-    Remove { id: usize }
+    Remove { id: usize },
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Task {
     id: usize,
     text: String,
-    done: bool
+    done: bool,
 }
 
 pub fn save(path: &Path, tasks: &[Task]) -> Result<()> {
@@ -42,25 +42,25 @@ pub fn load(path: &Path) -> Result<Vec<Task>> {
     match fs::read_to_string(path) {
         Ok(content) => serde_json::from_str(&content)
             .with_context(|| format!("failed to parse {}", path.display())),
-        Err(e) if e.kind() == io::ErrorKind::NotFound => { Ok(Vec::new()) }
-        Err(e) => { Err(e).with_context(|| format!("failed to read {}", path.display()))}
+        Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(Vec::new()),
+        Err(e) => Err(e).with_context(|| format!("failed to read {}", path.display())),
     }
 }
 
 pub fn add_task(tasks: &mut Vec<Task>, text: String) {
-    let next_id = tasks.iter().map(|t| t.id).max().unwrap_or(0) + 1; 
+    let next_id = tasks.iter().map(|t| t.id).max().unwrap_or(0) + 1;
 
     let new_task = Task {
         text,
         id: next_id,
-        done: false
+        done: false,
     };
 
     tasks.push(new_task);
 }
 
 pub fn remove_task(tasks: &mut Vec<Task>, id: usize) {
-    tasks.retain(|t| t.id != id);    
+    tasks.retain(|t| t.id != id);
 }
 
 pub fn list_tasks(tasks: &[Task]) -> String {
@@ -96,37 +96,48 @@ mod tests {
         let expected = vec![Task {
             text: "Need to review assignment".to_string(),
             done: false,
-            id: 1
+            id: 1,
         }];
         assert_eq!(tasks, expected);
     }
 
     #[test]
     fn compare_listed_tasks() {
-        let mut tasks = Vec::new(); 
+        let mut tasks = Vec::new();
         let task1 = Task {
             text: "Find the missing key".to_string(),
             done: true,
-            id: 1
+            id: 1,
         };
 
         let task2 = Task {
             text: "Find the missing value".to_string(),
             done: false,
-            id: 2
+            id: 2,
         };
 
         tasks.push(task1);
         tasks.push(task2);
 
-        assert_eq!(list_tasks(&tasks), "[✓] 1: Find the missing key\n[ ] 2: Find the missing value\n");
+        assert_eq!(
+            list_tasks(&tasks),
+            "[✓] 1: Find the missing key\n[ ] 2: Find the missing value\n"
+        );
     }
 
     #[test]
     fn mark_done_flips_done_flag() {
         let mut tasks = vec![
-            Task { id: 1, text: "This is done".to_string(), done: true },
-            Task { id: 2, text: "This is not done".to_string(), done: false },
+            Task {
+                id: 1,
+                text: "This is done".to_string(),
+                done: true,
+            },
+            Task {
+                id: 2,
+                text: "This is not done".to_string(),
+                done: false,
+            },
         ];
 
         assert!(mark_done(&mut tasks, 2).is_ok());
@@ -138,9 +149,11 @@ mod tests {
 
     #[test]
     fn mark_done_returns_err_for_unknown_id() {
-        let mut tasks = vec![
-            Task { id: 1, text: "This is done".to_string(), done: true },
-        ];
+        let mut tasks = vec![Task {
+            id: 1,
+            text: "This is done".to_string(),
+            done: true,
+        }];
 
         assert!(mark_done(&mut tasks, 99).is_err());
     }
@@ -151,8 +164,16 @@ mod tests {
 
         let path = dir.path().join("weez_todo_roundtrip.json");
         let tasks = vec![
-            Task { id: 1, text: "first".to_string(), done: false },
-            Task { id: 2, text: "second".to_string(), done: true },
+            Task {
+                id: 1,
+                text: "first".to_string(),
+                done: false,
+            },
+            Task {
+                id: 2,
+                text: "second".to_string(),
+                done: true,
+            },
         ];
 
         save(&path, &tasks).unwrap();
@@ -173,9 +194,21 @@ mod tests {
     #[test]
     fn different_ids_after_task_remove() {
         let mut tasks = vec![
-            Task { id: 1, text: "first".to_string(), done: false },
-            Task { id: 2, text: "second".to_string(), done: true },
-            Task { id: 3, text: "third".to_string(), done: false },
+            Task {
+                id: 1,
+                text: "first".to_string(),
+                done: false,
+            },
+            Task {
+                id: 2,
+                text: "second".to_string(),
+                done: true,
+            },
+            Task {
+                id: 3,
+                text: "third".to_string(),
+                done: false,
+            },
         ];
 
         remove_task(&mut tasks, 2);
