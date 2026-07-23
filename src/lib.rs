@@ -84,6 +84,7 @@ pub fn mark_done(tasks: &mut [Task], id: usize) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use std::collections::HashSet;
+    use tempfile::TempDir;
 
     use super::*;
 
@@ -146,7 +147,9 @@ mod tests {
 
     #[test]
     fn save_and_load_roundtrip() {
-        let path = std::env::temp_dir().join("weez_todo_roundtrip.json");
+        let dir = TempDir::new().unwrap();
+
+        let path = dir.path().join("weez_todo_roundtrip.json");
         let tasks = vec![
             Task { id: 1, text: "first".to_string(), done: false },
             Task { id: 2, text: "second".to_string(), done: true },
@@ -156,14 +159,12 @@ mod tests {
         let loaded = load(&path).unwrap();
 
         assert_eq!(loaded, tasks);
-
-        fs::remove_file(&path).ok();
     }
 
     #[test]
     fn load_returns_empty_vec_when_file_missing() {
-        let path = std::env::temp_dir().join("weez_todo_definitely_missing.json");
-        fs::remove_file(&path).ok(); // ensure it's gone even if a previous run left it
+        let dir = TempDir::new().unwrap();
+        let path = dir.path().join("weez_todo_definitely_missing.json");
 
         let loaded = load(&path).unwrap();
         assert!(loaded.is_empty());
