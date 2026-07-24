@@ -18,8 +18,10 @@ pub enum TodoCommand {
     Add { text: String },
     /// Show list
     List,
-    /// Mark list with id as done
+    /// Mark task with id as done
     Done { id: usize },
+    /// Mark task with id as undone
+    Undone { id: usize },
     /// Remove from list by id
     Remove { id: usize },
 }
@@ -75,6 +77,15 @@ pub fn list_tasks(tasks: &[Task]) -> String {
 pub fn mark_done(tasks: &mut [Task], id: usize) -> Result<()> {
     if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
         task.done = true;
+        Ok(())
+    } else {
+        anyhow::bail!("No task with id: {id}")
+    }
+}
+
+pub fn mark_undone(tasks: &mut [Task], id: usize) -> Result<()> {
+    if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
+        task.done = false;
         Ok(())
     } else {
         anyhow::bail!("No task with id: {id}")

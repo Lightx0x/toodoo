@@ -21,6 +21,10 @@ fn main() -> Result<()> {
             mark_done(&mut tasks, id)?;
             save(path, &tasks)?
         }
+        TodoCommand::Undone { id } => {
+            mark_undone(&mut tasks, id)?;
+            save(path, &tasks)?
+        }
     }
 
     Ok(())
