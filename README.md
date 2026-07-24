@@ -22,6 +22,7 @@ cargo install --path .
 toodoo add "Buy milk"        # add a task
 toodoo list                  # show all tasks
 toodoo done 1                # mark task 1 as complete
+toodoo undone 1              # mark task 1 as incomplete
 toodoo remove 1              # delete task 1
 ```
 
@@ -41,6 +42,11 @@ $ toodoo remove 2
 $ toodoo list
 [✓] 1: Finish Rust project
 [ ] 3: Try deleting from list
+
+$ toodoo undone 1
+$ toodoo list
+[ ] 1: Finish Rust project
+[ ] 3: Try deleting from list
 ```
 
 `toodoo --help` lists every command; `toodoo <command> --help` explains one.
@@ -54,7 +60,7 @@ Tasks are stored as JSON in `todo.json` in the current directory:
   {
     "id": 1,
     "text": "Finish Rust project",
-    "done": true
+    "done": false
   }
 ]
 ```
@@ -80,6 +86,7 @@ refer to two different tasks at two different times.
 ## Behaviour notes
 
 - `done` on an id that doesn't exist is an error.
+- `undone` on an id that doesn't exist is an error.
 - `remove` on an id that doesn't exist succeeds silently — removing something
   that isn't there already achieves the goal.
 - `list` never writes to disk.
