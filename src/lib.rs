@@ -16,14 +16,14 @@ pub struct Cli {
 pub enum TodoCommand {
     /// Add to list
     Add { text: String },
+    /// Remove from list by id
+    Remove { id: usize },
     /// Show list
     List,
     /// Mark task with id as done
     Done { id: usize },
     /// Mark task with id as undone
     Undone { id: usize },
-    /// Remove from list by id
-    Remove { id: usize },
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
