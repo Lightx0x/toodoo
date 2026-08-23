@@ -24,6 +24,7 @@ toodoo list                  # show all tasks
 toodoo done 1                # mark task 1 as complete
 toodoo undone 1              # mark task 1 as incomplete
 toodoo remove 1              # delete task 1
+toodoo change 1 "Buy eggs"   # change task 1
 ```
 
 Example session:
@@ -41,12 +42,17 @@ $ toodoo done 1
 $ toodoo remove 2
 $ toodoo list
 [✓] 1: Finish Rust project
-[ ] 3: Try deleting from list
+[ ] 2: Try deleting from list
 
 $ toodoo undone 1
 $ toodoo list
 [ ] 1: Finish Rust project
-[ ] 3: Try deleting from list
+[ ] 2: Try deleting from list
+
+$ toodoo change 1 "Finish Other Project"
+$ toodoo list
+[ ] 1: Finish Other project
+[ ] 2: Try deleting from list
 ```
 
 `toodoo --help` lists every command; `toodoo <command> --help` explains one.
@@ -70,19 +76,6 @@ error — so the first run works on a clean machine. If the file exists but can'
 be read or parsed, `toodoo` reports the problem and exits without writing,
 rather than silently starting over and overwriting your data.
 
-## Task ids
-
-Ids are assigned as `max(existing id) + 1`, not `count + 1`. That means a
-deleted id is never handed out again:
-
-```
-ids: 1, 2, 3  →  remove 2  →  ids: 1, 3  →  add  →  id 4
-```
-
-The numbering ends up gappy, which is deliberate. An id is meant to name one
-task for as long as that task exists; reusing a removed id would let `done 3`
-refer to two different tasks at two different times.
-
 ## Behaviour notes
 
 - `done` on an id that doesn't exist is an error.
@@ -90,6 +83,7 @@ refer to two different tasks at two different times.
 - `remove` on an id that doesn't exist succeeds silently — removing something
   that isn't there already achieves the goal.
 - `list` never writes to disk.
+- `change` on an id that doesn't exist is an error.
 
 ## Development
 
