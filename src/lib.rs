@@ -24,6 +24,8 @@ pub enum TodoCommand {
     Done { id: usize },
     /// Mark task with id as undone
     Undone { id: usize },
+    /// Change task in list by id
+    Change { id: usize, text: String }
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -63,6 +65,9 @@ pub fn add_task(tasks: &mut Vec<Task>, text: String) {
 
 pub fn remove_task(tasks: &mut Vec<Task>, id: usize) {
     tasks.retain(|t| t.id != id);
+    for (id, task) in tasks.iter_mut().enumerate() {
+        task.id = id + 1; 
+    }
 }
 
 pub fn list_tasks(tasks: &[Task]) -> String {
@@ -86,6 +91,15 @@ pub fn mark_done(tasks: &mut [Task], id: usize) -> Result<()> {
 pub fn mark_undone(tasks: &mut [Task], id: usize) -> Result<()> {
     if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
         task.done = false;
+        Ok(())
+    } else {
+        anyhow::bail!("No task with id: {id}")
+    }
+}
+
+pub fn change_task(tasks: &mut [Task], id: usize, text: String) -> Result<()> {
+    if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
+        task.text = text;
         Ok(())
     } else {
         anyhow::bail!("No task with id: {id}")

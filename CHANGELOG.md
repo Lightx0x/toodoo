@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- `change <id, text>` — change task; errors if id doesn't exist.
+
 ## [0.1.1] - 2026-07-24
+
 - `undone <id>` — mark a task incomplete; errors if the id doesn't exist.
 - change help section
 

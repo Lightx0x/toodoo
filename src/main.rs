@@ -25,6 +25,10 @@ fn main() -> Result<()> {
             mark_undone(&mut tasks, id)?;
             save(path, &tasks)?
         }
+        TodoCommand::Change { id, text } => {
+            change_task(&mut tasks, id, text)?;
+            save(path, &tasks)?
+        }
     }
 
     Ok(())
