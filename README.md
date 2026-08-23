@@ -11,7 +11,7 @@ cargo install toodoo
 Or from source:
 
 ```bash
-git clone https://github.com/Lightx0x/toodoo 
+git clone https://github.com/Lightx0x/toodoo
 cd toodoo
 cargo install --path .
 ```
@@ -51,7 +51,7 @@ $ toodoo list
 
 `toodoo --help` lists every command; `toodoo <command> --help` explains one.
 
-## Storage
+## Task State
 
 Tasks are stored as JSON in `todo.json` in the current directory:
 

@@ -46,8 +46,8 @@ pub fn load(path: &Path) -> Result<Vec<Task>> {
     match fs::read_to_string(path) {
         Ok(content) => serde_json::from_str(&content)
             .with_context(|| format!("failed to parse {}", path.display())),
-        Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(Vec::new()),
-        Err(e) => Err(e).with_context(|| format!("failed to read {}", path.display())),
+            Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(Vec::new()),
+            Err(e) => Err(e).with_context(|| format!("failed to read {}", path.display())),
     }
 }
 
@@ -242,6 +242,32 @@ mod tests {
         let ids = tasks.iter().map(|t| t.id).collect::<HashSet<usize>>();
 
         assert_eq!(tasks.len(), ids.len());
-        assert_eq!(tasks[2].id, 4);
+        assert_eq!(tasks[2].id, 3);
+    }
+
+    #[test]
+    fn change_task_from_id() {
+        let mut tasks = vec![
+            Task {
+                id: 1,
+                text: "first".to_string(),
+                done: false,
+            },
+            Task {
+                id: 2,
+                text: "second".to_string(),
+                done: true,
+            },
+            Task {
+                id: 3,
+                text: "third".to_string(),
+                done: false,
+            },
+        ];
+        change_task(&mut tasks, 1, "not first".to_string()).unwrap();
+
+        let result = tasks.iter_mut().filter(|t| t.id == 1).map(|t| t.text.clone()).collect::<String>();
+        
+        assert_eq!(result, "not first");
     }
 }
