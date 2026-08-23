@@ -46,13 +46,13 @@ pub fn load(path: &Path) -> Result<Vec<Task>> {
     match fs::read_to_string(path) {
         Ok(content) => serde_json::from_str(&content)
             .with_context(|| format!("failed to parse {}", path.display())),
-            Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(Vec::new()),
-            Err(e) => Err(e).with_context(|| format!("failed to read {}", path.display())),
+        Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(Vec::new()),
+        Err(e) => Err(e).with_context(|| format!("failed to read {}", path.display())),
     }
 }
 
 pub fn add_task(tasks: &mut Vec<Task>, text: String) {
-    let next_id = tasks.iter().map(|t| t.id).max().unwrap_or(0) + 1;
+    let next_id = tasks.len() + 1;
 
     let new_task = Task {
         text,
@@ -65,8 +65,8 @@ pub fn add_task(tasks: &mut Vec<Task>, text: String) {
 
 pub fn remove_task(tasks: &mut Vec<Task>, id: usize) {
     tasks.retain(|t| t.id != id);
-    for (id, task) in tasks.iter_mut().enumerate() {
-        task.id = id + 1; 
+    for (new_id, task) in tasks.iter_mut().enumerate() {
+        task.id = new_id + 1; 
     }
 }
 
