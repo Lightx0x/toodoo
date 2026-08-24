@@ -19,26 +19,33 @@ cargo install --path .
 ## Usage
 
 ```bash
-toodoo add "Buy milk"        # add a task
-toodoo list                  # show all tasks
-toodoo done 1                # mark task 1 as complete
-toodoo undone 1              # mark task 1 as incomplete
-toodoo remove 1              # delete task 1
-toodoo change 1 "Buy eggs"   # change task 1
+toodoo add "Buy milk"                # add a task
+toodoo add "Buy eggs" "Walk the dog" # add multiple tasks
+toodoo list                          # show all tasks
+toodoo done 1                        # mark task 1 as complete
+toodoo done 1 2 3                    # mark multiple tasks as complete
+toodoo undone 1                      # mark task 1 as incomplete
+toodoo undone 1 2 3                  # mark multiple tasks as incomplete
+toodoo remove 1                      # delete task 1
+toodoo remove 1 2 3                  # delete multiple tasks
+toodoo change 1 "Buy eggs"           # change task 1
 ```
 
 Example session:
 
 ```
-$ toodoo add "Finish Rust project"
-$ toodoo add "Test the remove feature"
-$ toodoo add "Try deleting from list"
+$ toodoo add "Finish Rust project" "Test the remove feature" "Try deleting from list"
 $ toodoo list
 [ ] 1: Finish Rust project
 [ ] 2: Test the remove feature
 [ ] 3: Try deleting from list
 
-$ toodoo done 1
+$ toodoo done 1 2
+$ toodoo list
+[✓] 1: Finish Rust project
+[✓] 2: Test the remove feature
+[ ] 3: Try deleting from list
+
 $ toodoo remove 2
 $ toodoo list
 [✓] 1: Finish Rust project
@@ -51,7 +58,7 @@ $ toodoo list
 
 $ toodoo change 1 "Finish Other Project"
 $ toodoo list
-[ ] 1: Finish Other project
+[ ] 1: Finish Other Project
 [ ] 2: Try deleting from list
 ```
 
