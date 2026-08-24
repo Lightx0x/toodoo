@@ -72,7 +72,7 @@ Tasks are stored as JSON in `todo.json` in the current directory:
 [
   {
     "id": 1,
-    "text": "Finish Rust project",
+    "text": "Finish Other project",
     "done": false
   }
 ]
