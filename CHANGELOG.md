@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `add <text(s)>` - add 1 or more tasks
 - `remove <id(s)>` - remove 1 or more tasks
-- `done <id(s)` - mark 1 or more completed tasks
-- `undone <id(s)` - unmark 1 or more completed tasks
+- `done <id(s)>` - mark 1 or more completed tasks
+- `undone <id(s)>` - unmark 1 or more completed tasks
 
 ## [0.1.2] - 2026-08-23
 
@@ -44,3 +44,5 @@ Initial release.
 
 [0.1.0]: https://github.com/Lighx0x/toodoo/releases/tag/v0.1.0
 [0.1.1]: https://github.com/Lighx0x/toodoo/releases/tag/v0.1.1
+[0.1.2]: https://github.com/Lighx0x/toodoo/releases/tag/v0.1.2
+[0.2.0]: https://github.com/Lighx0x/toodoo/releases/tag/v0.2.0
