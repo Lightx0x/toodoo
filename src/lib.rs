@@ -15,15 +15,27 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum TodoCommand {
     /// Add to list
-    Add { text: String },
-    /// Remove from list by id
-    Remove { id: usize },
+    Add { 
+        #[arg(num_args = 1..)]
+        texts: Vec<String> 
+    },
+    /// Remove from list by id(s)
+    Remove { 
+        #[arg(num_args = 1..)]
+        ids: Vec<usize>
+    },
     /// Show list
     List,
-    /// Mark task with id as done
-    Done { id: usize },
-    /// Mark task with id as undone
-    Undone { id: usize },
+    /// Mark task(s) with id as done
+    Done { 
+        #[arg(num_args = 1..)]
+        ids: Vec<usize>
+    },
+    /// Mark task(s) with id as undone
+    Undone { 
+        #[arg(num_args = 1..)]
+        ids: Vec<usize>
+    },
     /// Change task in list by id
     Change { id: usize, text: String }
 }

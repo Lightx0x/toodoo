@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- `add <text(s)>` - add 1 or more tasks
+- `remove <id(s)>` - remove 1 or more tasks
+- `done <id(s)` - mark 1 or more completed tasks
+- `undone <id(s)` - unmark 1 or more completed tasks
+
 ## [0.1.2] - 2026-08-23
 
 - `change <id, text>` — change task; errors if id doesn't exist.
@@ -14,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1] - 2026-07-24
 
-- `undone <id>` — mark a task incomplete; errors if the id doesn't exist.
+- `undone <id>` — unmark a completed task; errors if the id doesn't exist.
 - change help section
 
 ## [0.1.0] - 2026-07-23
@@ -25,7 +30,7 @@ Initial release.
 
 - `add <text>` — append a task to the list.
 - `list` — print all tasks with their id and completion status.
-- `done <id>` — mark a task complete; errors if the id doesn't exist.
+- `done <id>` — mark a completed task; errors if the id doesn't exist.
 - `remove <id>` — delete a task by id.
 - JSON persistence to `todo.json` in the current directory.
 - A missing `todo.json` is treated as an empty list, so the first run works on
