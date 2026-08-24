@@ -58,29 +58,27 @@ pub fn load(path: &Path) -> Result<Vec<Task>> {
     match fs::read_to_string(path) {
         Ok(content) => serde_json::from_str(&content)
             .with_context(|| format!("failed to parse {}", path.display())),
-            Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(Vec::new()),
-            Err(e) => Err(e).with_context(|| format!("failed to read {}", path.display())),
+        Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(Vec::new()),
+        Err(e) => Err(e).with_context(|| format!("failed to read {}", path.display())),
     }
 }
 
 pub fn add_task(tasks: &mut Vec<Task>, texts: Vec<String>) {
-    let next_id = tasks.len() + 1;
+    let next_id = tasks.len();
 
-    for text in texts {
+    for (i, text) in texts.into_iter().enumerate() {
         tasks.push(Task {
             text,
-            id: next_id,
+            id: next_id + 1 + i,
             done: false,
         })
     }
 }
 
 pub fn remove_task(tasks: &mut Vec<Task>, ids: Vec<usize>) {
-    for id in ids {
-        tasks.retain(|t| t.id != id);
-        for (new_id, task) in tasks.iter_mut().enumerate() {
-            task.id = new_id + 1; 
-        }
+    tasks.retain(|t| !ids.contains(&t.id));
+    for (new_id, task) in tasks.iter_mut().enumerate() {
+        task.id = new_id + 1; 
     }
 }
 
@@ -94,27 +92,27 @@ pub fn list_tasks(tasks: &[Task]) -> String {
 }
 
 pub fn mark_done(tasks: &mut [Task], ids: Vec<usize>) -> Result<()> {
-   for id in ids {
-       if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
-           task.done = true;
-       } else {
-           anyhow::bail!("No task with id: {id}")
-       }
-   }
+    for id in ids {
+        if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
+            task.done = true;
+        } else {
+            anyhow::bail!("No task with id: {id}")
+        }
+    }
 
-   Ok(())
+    Ok(())
 }
 
 pub fn mark_undone(tasks: &mut [Task], ids: Vec<usize>) -> Result<()> {
-   for id in ids {
-       if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
-           task.done = false;
-       } else {
-           anyhow::bail!("No task with id: {id}")
-       }
-   }
+    for id in ids {
+        if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
+            task.done = false;
+        } else {
+            anyhow::bail!("No task with id: {id}")
+        }
+    }
 
-   Ok(())
+    Ok(())
 }
 
 pub fn change_task(tasks: &mut [Task], id: usize, text: String) -> Result<()> {
@@ -136,7 +134,7 @@ mod tests {
     #[test]
     fn add_task_to_empty_list_assigns_id_1() {
         let mut tasks = Vec::new();
-        add_task(&mut tasks, "Need to review assignment".to_string());
+        add_task(&mut tasks, vec!["Need to review assignment".to_string()]);
 
         let expected = vec![Task {
             text: "Need to review assignment".to_string(),
@@ -185,7 +183,7 @@ mod tests {
             },
         ];
 
-        assert!(mark_done(&mut tasks, 2).is_ok());
+        assert!(mark_done(&mut tasks, vec![2]).is_ok());
 
         let task = tasks.iter().find(|t| t.id == 2).unwrap();
 
@@ -200,7 +198,7 @@ mod tests {
             done: true,
         }];
 
-        assert!(mark_done(&mut tasks, 99).is_err());
+        assert!(mark_done(&mut tasks, vec![99]).is_err());
     }
 
     #[test]
@@ -256,8 +254,8 @@ mod tests {
             },
         ];
 
-        remove_task(&mut tasks, 2);
-        add_task(&mut tasks, "fourth".to_string());
+        remove_task(&mut tasks, vec![2]);
+        add_task(&mut tasks, vec!["fourth".to_string()]);
 
         let ids = tasks.iter().map(|t| t.id).collect::<HashSet<usize>>();
 

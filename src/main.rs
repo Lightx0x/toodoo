@@ -9,20 +9,20 @@ fn main() -> Result<()> {
     let mut tasks = load(path)?;
     match cli.command {
         TodoCommand::List => println!("{}", list_tasks(&tasks)),
-        TodoCommand::Add { text } => {
-            add_task(&mut tasks, text);
+        TodoCommand::Add { texts } => {
+            add_task(&mut tasks, texts);
             save(path, &tasks)?
         }
-        TodoCommand::Remove { id } => {
-            remove_task(&mut tasks, id);
+        TodoCommand::Remove { ids } => {
+            remove_task(&mut tasks, ids);
             save(path, &tasks)?
         }
-        TodoCommand::Done { id } => {
-            mark_done(&mut tasks, id)?;
+        TodoCommand::Done { ids } => {
+            mark_done(&mut tasks, ids)?;
             save(path, &tasks)?
         }
-        TodoCommand::Undone { id } => {
-            mark_undone(&mut tasks, id)?;
+        TodoCommand::Undone { ids } => {
+            mark_undone(&mut tasks, ids)?;
             save(path, &tasks)?
         }
         TodoCommand::Change { id, text } => {
