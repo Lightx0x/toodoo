@@ -7,14 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- `flip <task(s)>` - flips tasks as done/undone
+## [0.2.1] - 2026-08-25
+
+- `flip <task(s)>` - flips tasks state (replaces done/undone feature)
 
 ## [0.2.0] - 2026-08-24
 
 - `add <text(s)>` - add 1 or more tasks
 - `remove <id(s)>` - remove 1 or more tasks
-- `done <id(s)>` - mark 1 or more completed tasks
-- `undone <id(s)>` - unmark 1 or more completed tasks
+- `done <id(s)>` - mark 1 or more tasks as complete
+- `undone <id(s)>` - unmark 1 or more tasks as incomplete
 
 ## [0.1.2] - 2026-08-23
 
@@ -23,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1] - 2026-07-24
 
-- `undone <id>` — mark a task complete; errors if the id doesn't exist.
+- `undone <id>` — mark a task incomplete; errors if the id doesn't exist.
 - change help section
 
 ## [0.1.0] - 2026-07-23
@@ -34,7 +36,7 @@ Initial release.
 
 - `add <text>` — append a task to the list.
 - `list` — print all tasks with their id and completion status.
-- `done <id>` — mark a task incomplete; errors if the id doesn't exist.
+- `done <id>` — mark a task complete; errors if the id doesn't exist.
 - `remove <id>` — delete a task by id.
 - JSON persistence to `todo.json` in the current directory.
 - A missing `todo.json` is treated as an empty list, so the first run works on
@@ -44,7 +46,8 @@ Initial release.
 - Ids are assigned as `max(existing id) + 1`, so an id is never reused after
   its task is removed.
 
-[0.1.0]: https://github.com/Lighx0x/toodoo/releases/tag/v0.1.0
-[0.1.1]: https://github.com/Lighx0x/toodoo/releases/tag/v0.1.1
-[0.1.2]: https://github.com/Lighx0x/toodoo/releases/tag/v0.1.2
-[0.2.0]: https://github.com/Lighx0x/toodoo/releases/tag/v0.2.0
+<!-- [0.1.0]: https://github.com/Lighx0x/toodoo/releases/tag/v0.1.0 -->
+<!-- [0.1.1]: https://github.com/Lighx0x/toodoo/releases/tag/v0.1.1 -->
+<!-- [0.1.2]: https://github.com/Lighx0x/toodoo/releases/tag/v0.1.2 -->
+<!-- [0.2.0]: https://github.com/Lighx0x/toodoo/releases/tag/v0.2.0 -->
+<!-- [0.2.1]: https://github.com/Lighx0x/toodoo/releases/tag/v0.2.1 -->

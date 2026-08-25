@@ -18,24 +18,24 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum TodoCommand {
     /// Add to list
-    Add { 
+    Add {
         #[arg(num_args = 1..)]
-        texts: Vec<String> 
+        texts: Vec<String>,
     },
     /// Remove from list by id(s)
-    Remove { 
+    Remove {
         #[arg(num_args = 1..)]
-        ids: Vec<usize>
+        ids: Vec<usize>,
     },
     /// Show list
     List,
-    /// Mark task(s) with id as done/undone
-    Flip { 
+    /// Mark task(s) with id(s) as done/undone
+    Flip {
         #[arg(num_args = 1..)]
-        ids: Vec<usize>
+        ids: Vec<usize>,
     },
     /// Change task in list by id
-    Change { id: usize, text: String }
+    Change { id: usize, text: String },
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -76,7 +76,7 @@ pub fn add_task(tasks: &mut Vec<Task>, texts: Vec<String>) {
 pub fn remove_task(tasks: &mut Vec<Task>, ids: Vec<usize>) {
     tasks.retain(|t| !ids.contains(&t.id));
     for (new_id, task) in tasks.iter_mut().enumerate() {
-        task.id = new_id + 1; 
+        task.id = new_id + 1;
     }
 }
 

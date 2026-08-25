@@ -156,7 +156,11 @@ fn change_task_from_id() {
     ];
     change_task(&mut tasks, 1, "not first".to_string()).unwrap();
 
-    let result = tasks.iter_mut().filter(|t| t.id == 1).map(|t| t.text.clone()).collect::<String>();
+    let result = tasks
+        .iter_mut()
+        .filter(|t| t.id == 1)
+        .map(|t| t.text.clone())
+        .collect::<String>();
 
     assert_eq!(result, "not first");
 }

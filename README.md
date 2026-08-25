@@ -24,8 +24,8 @@ toodoo add "Buy eggs" "Walk the dog" # add multiple tasks
 toodoo list                          # show all tasks
 toodoo flip 1                        # mark task 1 as done
 toodoo flip 1 2 3                    # mark multiple tasks as done
-toodoo flip 1                      # mark task 1 as incomplete
-toodoo flip 1 2 3                  # mark multiple tasks as incomplete
+toodoo flip 1                        # mark task 1 as incomplete
+toodoo flip 1 2 3                    # mark multiple tasks as incomplete
 toodoo remove 1                      # delete task 1
 toodoo remove 1 2 3                  # delete multiple tasks
 toodoo change 1 "Buy eggs"           # change task 1
