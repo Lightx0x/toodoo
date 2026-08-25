@@ -17,12 +17,8 @@ fn main() -> Result<()> {
             remove_task(&mut tasks, ids);
             save(path, &tasks)?
         }
-        TodoCommand::Done { ids } => {
-            mark_done(&mut tasks, ids)?;
-            save(path, &tasks)?
-        }
-        TodoCommand::Undone { ids } => {
-            mark_undone(&mut tasks, ids)?;
+        TodoCommand::Flip { ids } => {
+            flip_task(&mut tasks, ids)?;
             save(path, &tasks)?
         }
         TodoCommand::Change { id, text } => {

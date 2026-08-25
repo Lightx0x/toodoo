@@ -29,13 +29,8 @@ pub enum TodoCommand {
     },
     /// Show list
     List,
-    /// Mark task(s) with id as done
-    Done { 
-        #[arg(num_args = 1..)]
-        ids: Vec<usize>
-    },
-    /// Mark task(s) with id as undone
-    Undone { 
+    /// Mark task(s) with id as done/undone
+    Flip { 
         #[arg(num_args = 1..)]
         ids: Vec<usize>
     },
@@ -94,22 +89,10 @@ pub fn list_tasks(tasks: &[Task]) -> String {
     list
 }
 
-pub fn mark_done(tasks: &mut [Task], ids: Vec<usize>) -> Result<()> {
+pub fn flip_task(tasks: &mut [Task], ids: Vec<usize>) -> Result<()> {
     for id in ids {
         if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
-            task.done = true;
-        } else {
-            anyhow::bail!("No task with id: {id}")
-        }
-    }
-
-    Ok(())
-}
-
-pub fn mark_undone(tasks: &mut [Task], ids: Vec<usize>) -> Result<()> {
-    for id in ids {
-        if let Some(task) = tasks.iter_mut().find(|t| t.id == id) {
-            task.done = false;
+            task.done = !task.done;
         } else {
             anyhow::bail!("No task with id: {id}")
         }

@@ -41,7 +41,7 @@ fn compare_listed_tasks() {
 }
 
 #[test]
-fn mark_done_flips_done_flag() {
+fn flips_done_task() {
     let mut tasks = vec![
         Task {
             id: 1,
@@ -55,7 +55,7 @@ fn mark_done_flips_done_flag() {
         },
     ];
 
-    assert!(mark_done(&mut tasks, vec![2]).is_ok());
+    assert!(flip_task(&mut tasks, vec![2]).is_ok());
 
     let task = tasks.iter().find(|t| t.id == 2).unwrap();
 
@@ -63,14 +63,14 @@ fn mark_done_flips_done_flag() {
 }
 
 #[test]
-fn mark_done_returns_err_for_unknown_id() {
+fn flip_returns_err_for_unknown_id() {
     let mut tasks = vec![Task {
         id: 1,
         text: "This is done".to_string(),
         done: true,
     }];
 
-    assert!(mark_done(&mut tasks, vec![99]).is_err());
+    assert!(flip_task(&mut tasks, vec![99]).is_err());
 }
 
 #[test]

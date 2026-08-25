@@ -22,10 +22,10 @@ cargo install --path .
 toodoo add "Buy milk"                # add a task
 toodoo add "Buy eggs" "Walk the dog" # add multiple tasks
 toodoo list                          # show all tasks
-toodoo done 1                        # mark task 1 as complete
-toodoo done 1 2 3                    # mark multiple tasks as complete
-toodoo undone 1                      # mark task 1 as incomplete
-toodoo undone 1 2 3                  # mark multiple tasks as incomplete
+toodoo flip 1                        # mark task 1 as done
+toodoo flip 1 2 3                    # mark multiple tasks as done
+toodoo flip 1                      # mark task 1 as incomplete
+toodoo flip 1 2 3                  # mark multiple tasks as incomplete
 toodoo remove 1                      # delete task 1
 toodoo remove 1 2 3                  # delete multiple tasks
 toodoo change 1 "Buy eggs"           # change task 1
@@ -40,7 +40,7 @@ $ toodoo list
 [ ] 2: Test the remove feature
 [ ] 3: Try deleting from list
 
-$ toodoo done 1 2
+$ toodoo flip 1 2
 $ toodoo list
 [✓] 1: Finish Rust project
 [✓] 2: Test the remove feature
@@ -51,7 +51,7 @@ $ toodoo list
 [✓] 1: Finish Rust project
 [ ] 2: Try deleting from list
 
-$ toodoo undone 1
+$ toodoo flip 1
 $ toodoo list
 [ ] 1: Finish Rust project
 [ ] 2: Try deleting from list
@@ -85,8 +85,7 @@ rather than silently starting over and overwriting your data.
 
 ## Behaviour notes
 
-- `done` on an id that doesn't exist is an error.
-- `undone` on an id that doesn't exist is an error.
+- `flip` on an id that doesn't exist is an error.
 - `remove` on an id that doesn't exist succeeds silently — removing something
   that isn't there already achieves the goal.
 - `list` never writes to disk.
