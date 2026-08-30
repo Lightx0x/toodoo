@@ -48,11 +48,15 @@ pub fn remove_task(tasks: &mut Vec<Task>, ids: Vec<usize>) {
 
 pub fn list_tasks(tasks: &[Task]) -> String {
     let mut list = String::new();
-    for task in tasks {
-        let task_status = if task.done { "✓" } else { " " };
-        writeln!(list, "[{}] {}: {}", task_status, task.id, task.text).unwrap()
+    if !tasks.is_empty() {
+        for task in tasks {
+            let task_status = if task.done { "✓" } else { " " };
+            writeln!(list, "[{}] {}: {}", task_status, task.id, task.text).unwrap()
+        }
+        list
+    } else {
+        format!("No Tasks found")
     }
-    list
 }
 
 pub fn flip_task(tasks: &mut [Task], ids: Vec<usize>) -> Result<()> {

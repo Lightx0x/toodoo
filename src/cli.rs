@@ -21,7 +21,7 @@ pub enum TodoCommand {
     },
     /// Show list
     List,
-    /// Mark task(s) with id(s) as done/undone
+    /// Flips task(s) between done and undone
     Flip {
         #[arg(num_args = 1..)]
         ids: Vec<usize>,

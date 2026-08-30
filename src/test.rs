@@ -2,6 +2,11 @@ use std::collections::HashSet;
 use tempfile::TempDir;
 
 use super::*;
+#[test]
+fn empty_list_prints_no_task() {
+    let tasks = Vec::new();
+    assert_eq!(list_tasks(&tasks), "No Tasks found");
+}
 
 #[test]
 fn add_task_to_empty_list_assigns_id_1() {
@@ -13,6 +18,48 @@ fn add_task_to_empty_list_assigns_id_1() {
         done: false,
         id: 1,
     }];
+    assert_eq!(tasks, expected);
+}
+
+#[test]
+fn add_multiple_tasks() {
+    let mut tasks = Vec::new();
+    add_task(
+        &mut tasks,
+        vec![
+            "Need to review assignment".to_string(),
+            "Need to dress".to_string(),
+        ],
+    );
+
+    let expected = vec![
+        Task {
+            text: "Need to review assignment".to_string(),
+            done: false,
+            id: 1,
+        },
+        Task {
+            text: "Need to dress".to_string(),
+            done: false,
+            id: 2,
+        },
+    ];
+    assert_eq!(tasks, expected);
+}
+
+#[test]
+fn remove_multiple_tasks() {
+    let mut tasks = Vec::new();
+    add_task(
+        &mut tasks,
+        vec![
+            "Need to review assignment".to_string(),
+            "Need to dress".to_string(),
+        ],
+    );
+    remove_task(&mut tasks, vec![1, 2]);
+
+    let expected = vec![];
     assert_eq!(tasks, expected);
 }
 
@@ -41,7 +88,7 @@ fn compare_listed_tasks() {
 }
 
 #[test]
-fn flips_done_task() {
+fn flips_task_to_done() {
     let mut tasks = vec![
         Task {
             id: 1,
@@ -60,6 +107,28 @@ fn flips_done_task() {
     let task = tasks.iter().find(|t| t.id == 2).unwrap();
 
     assert!(task.done);
+}
+
+#[test]
+fn flips_task_to_undone() {
+    let mut tasks = vec![
+        Task {
+            id: 1,
+            text: "This is done".to_string(),
+            done: true,
+        },
+        Task {
+            id: 2,
+            text: "This is not done".to_string(),
+            done: false,
+        },
+    ];
+
+    assert!(flip_task(&mut tasks, vec![1]).is_ok());
+
+    let task = tasks.iter().find(|t| t.id == 1).unwrap();
+
+    assert!(!task.done);
 }
 
 #[test]
@@ -163,4 +232,15 @@ fn change_task_from_id() {
         .collect::<String>();
 
     assert_eq!(result, "not first");
+}
+
+#[test]
+fn change_returns_err_for_unknown_id() {
+    let mut tasks = vec![Task {
+        id: 1,
+        text: "This is unchanged".to_string(),
+        done: true,
+    }];
+
+    assert!(change_task(&mut tasks, 99, "This is changed".to_string()).is_err());
 }
