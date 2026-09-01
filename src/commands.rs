@@ -79,3 +79,11 @@ pub fn change_task(tasks: &mut [Task], id: usize, text: String) -> Result<()> {
         anyhow::bail!("No task with id: {id}")
     }
 }
+
+pub fn clear_tasks(tasks: &mut Vec<Task>) -> Result<()> {
+    while !tasks.is_empty() {
+        tasks.pop();
+    }
+
+    Ok(())
+}

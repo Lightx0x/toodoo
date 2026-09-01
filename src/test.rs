@@ -244,3 +244,27 @@ fn change_returns_err_for_unknown_id() {
 
     assert!(change_task(&mut tasks, 99, "This is changed".to_string()).is_err());
 }
+
+#[test]
+fn clear_tasks_returns_empty_vec() {
+    let mut tasks = vec![
+        Task {
+            id: 1,
+            text: "first".to_string(),
+            done: false,
+        },
+        Task {
+            id: 2,
+            text: "second".to_string(),
+            done: true,
+        },
+        Task {
+            id: 3,
+            text: "third".to_string(),
+            done: false,
+        },
+    ];
+
+    assert!(clear_tasks(&mut tasks).is_ok());
+    assert_eq!(tasks, vec![]);
+}

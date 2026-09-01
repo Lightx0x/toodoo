@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- `toodoo list` - empty list now prints "No Tasks found"
 - `toodoo clear` - clears all tasks
-- `toodoo reset` - flips all tasks undone
 
 ## [0.2.1] - 2026-08-25
 

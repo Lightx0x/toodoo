@@ -9,12 +9,12 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum TodoCommand {
-    /// Add to list
+    /// Add task(s) to list
     Add {
         #[arg(num_args = 1..)]
         texts: Vec<String>,
     },
-    /// Remove from list by id(s)
+    /// Remove task(s) from list by id(s)
     Remove {
         #[arg(num_args = 1..)]
         ids: Vec<usize>,
@@ -28,4 +28,6 @@ pub enum TodoCommand {
     },
     /// Change task in list by id
     Change { id: usize, text: String },
+    /// Clear all tasks
+    Clear,
 }

@@ -25,6 +25,10 @@ fn main() -> Result<()> {
             change_task(&mut tasks, id, text)?;
             save(path, &tasks)?
         }
+        TodoCommand::Clear => {
+            clear_tasks(&mut tasks)?;
+            save(path, &tasks)?
+        }
     }
 
     Ok(())
