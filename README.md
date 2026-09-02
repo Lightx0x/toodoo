@@ -66,7 +66,7 @@ $ toodoo list
 
 ## Task State
 
-Tasks are stored as JSON in `todo.json` in the current directory:
+Tasks are stored as JSON in `toodoo.json` in the current directory:
 
 ```json
 [

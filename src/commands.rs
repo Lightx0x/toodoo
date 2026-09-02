@@ -55,7 +55,7 @@ pub fn list_tasks(tasks: &[Task]) -> String {
         }
         list
     } else {
-        format!("No Tasks found")
+        "No Tasks found".to_string()
     }
 }
 
@@ -80,10 +80,6 @@ pub fn change_task(tasks: &mut [Task], id: usize, text: String) -> Result<()> {
     }
 }
 
-pub fn clear_tasks(tasks: &mut Vec<Task>) -> Result<()> {
-    while !tasks.is_empty() {
-        tasks.pop();
-    }
-
-    Ok(())
+pub fn clear_tasks(tasks: &mut Vec<Task>) {
+    tasks.clear();
 }

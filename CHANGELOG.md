@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `toodoo list` - empty list now prints "No Tasks found"
 - `toodoo clear` - clears all tasks
+- JSON persistence to `toodoo.json` in the current directory.
 
 ## [0.2.1] - 2026-08-25
 

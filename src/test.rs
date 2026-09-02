@@ -265,6 +265,6 @@ fn clear_tasks_returns_empty_vec() {
         },
     ];
 
-    assert!(clear_tasks(&mut tasks).is_ok());
-    assert_eq!(tasks, vec![]);
+    clear_tasks(&mut tasks);
+    assert!(tasks.is_empty());
 }
