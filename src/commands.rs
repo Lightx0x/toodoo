@@ -35,7 +35,7 @@ pub fn add_task(tasks: &mut Vec<Task>, texts: Vec<String>) {
             text,
             id: next_id + 1 + i,
             done: false,
-        })
+        });
     }
 }
 

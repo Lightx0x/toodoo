@@ -10,8 +10,12 @@ fn main() -> Result<()> {
     match cli.command {
         TodoCommand::List => println!("{}", list_tasks(&tasks)),
         TodoCommand::Add { texts } => {
+            let task_len = tasks.len();
             add_task(&mut tasks, texts);
-            save(path, &tasks)?
+            save(path, &tasks)?;
+            for task in &tasks[task_len..] {
+                println!("Added {}", task.text);
+            }
         }
         TodoCommand::Remove { ids } => {
             remove_task(&mut tasks, ids);
