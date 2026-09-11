@@ -18,20 +18,37 @@ fn main() -> Result<()> {
             }
         }
         TodoCommand::Remove { ids } => {
+            let removed: Vec<String> = tasks
+                .iter()
+                .filter(|t| ids.contains(&t.id))
+                .map(|t| t.text.clone())
+                .collect();
             remove_task(&mut tasks, ids);
-            save(path, &tasks)?
+            save(path, &tasks)?;
+            for text in removed {
+                println!("Removed {text}");
+            }
         }
         TodoCommand::Flip { ids } => {
-            flip_task(&mut tasks, ids)?;
-            save(path, &tasks)?
+            flip_task(&mut tasks, ids.clone())?;
+            save(path, &tasks)?;
+            for task in tasks.iter().filter(|t| ids.contains(&t.id)) {
+                let status = if task.done { "done" } else { "undone" };
+                println!("Flipped {}: {} -> {status}", task.id, task.text);
+            }
         }
         TodoCommand::Change { id, text } => {
             change_task(&mut tasks, id, text)?;
-            save(path, &tasks)?
+            save(path, &tasks)?;
+            if let Some(task) = tasks.iter().find(|t| t.id == id) {
+                println!("Changed {}: {}", task.id, task.text);
+            }
         }
         TodoCommand::Clear => {
+            let count = tasks.len();
             clear_tasks(&mut tasks);
-            save(path, &tasks)?
+            save(path, &tasks)?;
+            println!("Cleared {count} task(s)");
         }
     }
 
