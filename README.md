@@ -22,57 +22,69 @@ cargo install --path .
 toodoo add "Buy milk"                # add a task
 toodoo add "Buy eggs" "Walk the dog" # add multiple tasks
 toodoo list                          # show all tasks
-toodoo flip 1                        # mark task 1 as done
-toodoo flip 1 2 3                    # mark multiple tasks as done
-toodoo flip 1                        # mark task 1 as incomplete
-toodoo flip 1 2 3                    # mark multiple tasks as incomplete
+toodoo flip 1                        # toggle task 1 between done and undone
+toodoo flip 1 2 3                    # toggle multiple tasks
 toodoo remove 1                      # delete task 1
 toodoo remove 1 2 3                  # delete multiple tasks
 toodoo change 1 "Buy eggs"           # change task 1
+toodoo clear                         # delete all tasks
 ```
+
+Every command that modifies the list prints a confirmation once the change has
+been written to disk.
 
 Example session:
 
 ```
 $ toodoo add "Finish Rust project" "Test the remove feature" "Try deleting from list"
+Added Finish Rust project
+Added Test the remove feature
+Added Try deleting from list
+
 $ toodoo list
 [ ] 1: Finish Rust project
 [ ] 2: Test the remove feature
 [ ] 3: Try deleting from list
 
 $ toodoo flip 1 2
-$ toodoo list
-[✓] 1: Finish Rust project
-[✓] 2: Test the remove feature
-[ ] 3: Try deleting from list
+Flipped 1: Finish Rust project -> done
+Flipped 2: Test the remove feature -> done
 
 $ toodoo remove 2
+Removed Test the remove feature
+
 $ toodoo list
 [✓] 1: Finish Rust project
 [ ] 2: Try deleting from list
 
 $ toodoo flip 1
-$ toodoo list
-[ ] 1: Finish Rust project
-[ ] 2: Try deleting from list
+Flipped 1: Finish Rust project -> undone
 
 $ toodoo change 1 "Finish Other Project"
+Changed 1: Finish Other Project
+
 $ toodoo list
 [ ] 1: Finish Other Project
 [ ] 2: Try deleting from list
+
+$ toodoo clear
+Cleared 2 task(s)
+
+$ toodoo list
+No Tasks found
 ```
 
 `toodoo --help` lists every command; `toodoo <command> --help` explains one.
 
 ## Task State
 
-Tasks are stored as JSON in `toodoo.json` in the current directory:
+Tasks are stored as JSON in `todo.json` in the current directory:
 
 ```json
 [
   {
     "id": 1,
-    "text": "Finish Other project",
+    "text": "Finish Other Project",
     "done": false
   }
 ]
@@ -88,8 +100,11 @@ rather than silently starting over and overwriting your data.
 - `flip` on an id that doesn't exist is an error.
 - `remove` on an id that doesn't exist succeeds silently — removing something
   that isn't there already achieves the goal.
-- `list` never writes to disk.
 - `change` on an id that doesn't exist is an error.
+- `clear` on an empty list succeeds and reports `Cleared 0 task(s)`.
+- `list` never writes to disk.
+- Confirmations are printed only after a successful save; if the write fails,
+  the error is reported instead and nothing is confirmed.
 
 ## Development
 
