@@ -34,14 +34,15 @@ fn main() -> Result<()> {
             save(path, &tasks)?;
             for task in tasks.iter().filter(|t| ids.contains(&t.id)) {
                 let status = if task.done { "done" } else { "undone" };
-                println!("Flipped {}: {} -> {status}", task.id, task.text);
+                println!("Flipped task {}: {} -> {status}", task.id, task.text);
             }
         }
         TodoCommand::Change { id, text } => {
+            let old = tasks.iter().find(|t| t.id == id).map(|t| t.text.clone());
             change_task(&mut tasks, id, text)?;
             save(path, &tasks)?;
-            if let Some(task) = tasks.iter().find(|t| t.id == id) {
-                println!("Changed {}: {}", task.id, task.text);
+            if let (Some(old), Some(task)) = (old, tasks.iter().find(|t| t.id == id)) {
+                println!("Changed task {}: {old} -> {}", task.id, task.text);
             }
         }
         TodoCommand::Clear => {

@@ -47,8 +47,8 @@ $ toodoo list
 [ ] 3: Try deleting from list
 
 $ toodoo flip 1 2
-Flipped 1: Finish Rust project -> done
-Flipped 2: Test the remove feature -> done
+Flipped task 1: Finish Rust project -> done
+Flipped task 2: Test the remove feature -> done
 
 $ toodoo remove 2
 Removed Test the remove feature
@@ -58,10 +58,10 @@ $ toodoo list
 [ ] 2: Try deleting from list
 
 $ toodoo flip 1
-Flipped 1: Finish Rust project -> undone
+Flipped task 1: Finish Rust project -> undone
 
 $ toodoo change 1 "Finish Other Project"
-Changed 1: Finish Other Project
+Changed task 1: Finish Rust project -> Finish Other Project
 
 $ toodoo list
 [ ] 1: Finish Other Project
